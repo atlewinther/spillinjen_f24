@@ -1,0 +1,29 @@
+// Game Over
+// Mit første script
+
+// Disse linjer importerer de nødvendige namespaces til brug af C# collections, som f.eks. lister, arrays osv
+using System.Collections;
+using System.Collections.Generic;
+// Denne linje importerer namespace for Unity Engine, hvilket giver adgang til alle de klasser og metoder, 
+// der er nødvendige for at skabe Unity-applikationer.
+using UnityEngine;
+
+
+// kommentar
+
+// dette er en klasse kaldet Chapter1, som nedarver fra MonoBehaviour-klassen.
+// monoBehaviour-klassen er en af de mest grundlæggende klasser i Unity, og den er nødvendig for at skabe scripts,
+public class Chapter1 : MonoBehaviour
+{
+    // start-metoden kaldes, når spillet startes.
+    void Start()
+    {
+        
+    }
+
+    // update-metoden kaldes en gang per frame.
+    void Update()
+    {
+        
+    }
+}

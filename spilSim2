@@ -1,0 +1,58 @@
+// Spil som viser statistik over spillets gang
+namespace spilsim;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        int score; // int er en 32-bit integer
+        double distance; // double er en 64-bit floating point
+        char nytSpil; // char er en 16-bit unicode character
+        bool energiFelt; // bool er en boolean
+        short liv, fjenderDræbt; // short er en 16-bit integer
+
+        score = 0; // initialiserer score til 0
+        distance = 1200.76; // initialiserer distance til 1200.76
+        nytSpil = 'j'; // initialiserer nytSpil til 'j'
+        energiFelt = true; // initialiserer energiFelt til true
+        liv = 3; // initialiserer liv til 3
+        fjenderDræbt = 2; // initialiserer fjenderDræbt til 2
+
+        // udskriver værdierne
+        System.Console.WriteLine("Score: " + score);
+        System.Console.WriteLine("Distance: " + distance);
+        System.Console.WriteLine("Nyt spil: " + nytSpil);
+        System.Console.WriteLine("Energifelt: " + energiFelt);
+        System.Console.WriteLine("Liv: " + liv);
+        System.Console.WriteLine("Fjender dræbt: " + fjenderDræbt);
+
+        double benzin = 12.7; // initialiserer benzin til 12.7
+        System.Console.WriteLine("Benzin: " + benzin);
+
+        // nye liv
+        liv++; // øger liv med 1
+
+        // nye fjender dræbt
+        fjenderDræbt += 3; // øger fjenderDræbt med 3
+
+        // nye score
+        score = score + 100; // øger score med 100
+
+        // nye distance
+        distance = distance - 76.3; // trækker 76.3 fra distance
+
+        // udskriver værdierne
+        System.Console.WriteLine("Score: " + score);
+        System.Console.WriteLine("Distance: " + distance);
+        System.Console.WriteLine("Liv: " + liv);
+        System.Console.WriteLine("Fjender dræbt: " + fjenderDræbt);
+
+
+
+        
+
+        return; // returnerer fra Main-metoden hvorved programmet afsluttes
+
+
+    }
+}

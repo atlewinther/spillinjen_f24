@@ -1,0 +1,144 @@
+using UnityEngine;
+
+
+// Scriptet MoveV2 styrer spillerens bevægelse, hop og død.
+public class MoveV2 : MonoBehaviour
+{
+
+    // Variabler
+    CapsuleCollider2D myCollider;
+    private Rigidbody2D _rigidbody;
+
+    // Animator gør det muligt at styre animationer
+    private Animator myAnimator;
+
+    // moveInput styre spillerens bevægelse
+    private float moveInput;
+
+    // speed styrer spillerens hastighed
+    public float speed;
+
+    // jumpForce styrer spillerens hop
+    public float jumpForce;
+
+    // isFacingRight styrer spillerens retning
+
+    private bool isFacingRight = true;
+    private bool isCrouching = false; 
+    
+    // isAlive styrer om spilleren er i live
+    bool isAlive = true;
+
+    // grounded styrer om spilleren er på jorden
+    bool grounded;
+
+    // deathKick styrer hvor langt spilleren ryger når han dør
+    public Vector2 deathKick = new Vector2(2.5f, 2.5f);
+
+    void Start()
+    {
+        _rigidbody = GetComponent<Rigidbody2D>(); // Henter Rigidbody2D komponenten
+        myAnimator = GetComponent<Animator>(); // Henter Animator komponenten
+        myCollider = GetComponent<CapsuleCollider2D>(); // Henter CapsuleCollider2D komponenten
+    }
+
+    void Update()
+    {
+        // Hvis spilleren ikke er i live, så returner den fra metoden
+        if (!isAlive)
+        {
+            return;
+        }
+
+        // Kører Run metoden
+        Run();
+
+        // Flip metoden
+        Flip();
+
+        // Bevægelse
+        _rigidbody.velocity = new Vector2(moveInput * speed, _rigidbody.velocity.y); // Bevægelse i x-aksen frem og tilbage
+
+        // Hop
+        if (Input.GetKeyDown(KeyCode.Space) && grounded) // Player kan kun hoppe hvis han er på jorden
+        {
+            Jump();
+        }
+
+        // Crouching
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            isCrouching = true;
+            myAnimator.SetBool("isCrouching", true); // Sætter isCrouching til true
+        }
+        else if (Input.GetKeyUp(KeyCode.C))
+        {
+            isCrouching = false;
+            myAnimator.SetBool("isCrouching", false);  // Sætter isCrouching til false
+        }
+
+        Die();
+    }
+
+    // Run metoden styrer spillerens bevægelse
+    void Run()
+    {
+        moveInput = Input.GetAxisRaw("Horizontal"); // Henter input fra Horizontal aksen
+        myAnimator.SetBool("isRunning", moveInput != 0); // Sætter isRunning til true hvis moveInput er forskellig fra 0
+    }
+
+    // Jump metoden styrer spillerens hop
+    private void Jump()
+    {
+        // Tilføjer en impuls til spilleren i y-aksen
+        // AddForce tilføjer en kraft til spilleren
+        // Impuls er en kraft der kun virker i et kort øjeblik
+        // ForceMode2D.Impulse gør at spilleren hopper opad
+        _rigidbody.AddForce(new Vector2(0f, jumpForce), ForceMode2D.Impulse);
+        grounded = false; 
+        myAnimator.SetBool("isJumping", true);
+    }
+
+    // OnLanding metoden styrer spillerens landing
+    public void OnLanding()
+    {
+        myAnimator.SetBool("isJumping", false);
+    }
+
+    // OnCollisionEnter2D metoden styrer spillerens collision med jorden
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.gameObject.CompareTag("Ground"))
+        {
+            grounded = true;
+            OnLanding(); // Kører OnLanding metoden
+        }
+    }
+
+    // Flip metoden styrer spillerens retning
+
+    void Flip()
+    {
+        float moveX = Input.GetAxis("Horizontal");
+        if (moveX > 0 && !isFacingRight || moveX < 0 && isFacingRight) // Hvis moveX er større end 0 og isFacingRight er false eller moveX er mindre end 0 og isFacingRight er true
+        {
+            // Sætter isFacingRight til det modsatte af hvad det er nu og flipper spilleren på x-aksen
+            isFacingRight = !isFacingRight;
+            Vector3 theScale = transform.localScale;
+            theScale.x *= -1;
+            transform.localScale = theScale;
+        }
+    }
+
+    // Die metoden styrer spillerens død
+    // Metoden tjekker om spilleren er i kontakt med en fjende
+    void Die()
+    {
+        if(myCollider.IsTouchingLayers(LayerMask.GetMask("enemy")))
+        {
+            isAlive = false;
+            myAnimator.SetTrigger("Dying"); // Sætter Dying til true
+            _rigidbody.velocity = deathKick;
+        }
+    }
+}
